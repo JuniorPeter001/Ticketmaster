@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Events</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+body{
+    background:#f4f4f4;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* HEADER */
+.top-header{
+    background:#000;
+    color:#fff;
+    padding:15px;
+}
+
+/* EVENT */
+.event{
+    justify-self: center;
+    text-align: center;
+    margin-left: 30%;
+}
+
+/* FLAG */
+.flag-circle{
+    width:18px;
+    height:18px;
+    border: 1px solid #737070;
+    border-radius:50%;
+    overflow:hidden;
+    display:inline-block;
+    margin-left:8px;
+    margin-top: 10px;
+}
+
+.flag-circle img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* TABS */
+.custom-tabs{
+    background:#000;
+    color:#aaa;
+    display:flex;
+    padding:0 15px;
+}
+
+.custom-tabs div{
+    padding:10px 15px;
+    cursor:pointer;
+}
+
+.custom-tabs .active{
+    color:#fff;
+    border-bottom:3px solid #fff;
+}
+
+/* CARD */
+.event-card{
+    background:#0e0e0e;
+    margin:15px;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 3px 8px rgba(0,0,0,0.1);
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.event-card:hover{
+    transform:scale(1.01);
+}
+
+.event-image{
+    width:100%;
+    height:250px;
+    object-fit:cover;
+}
+
+.event-content{
+    padding:15px;
+}
+
+.event-date{
+    font-size:13px;
+    color:#fff;
+}
+
+.event-title{
+    font-weight:700;
+    font-size:20px;
+    color: #fff;
+}
+
+.event-location{
+    font-size:14px;
+    color:#fff;
+}
+
+/* BOTTOM NAV */
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:#fff;
+    border-top:1px solid #ddd;
+    display:flex;
+    justify-content:space-around;
+    padding:8px 0;
+}
+
+.bottom-nav a{
+    text-decoration:none;
+    color:#888;
+    font-size:12px;
+    text-align:center;
+}
+
+.bottom-nav a.active{
+    color:#0d6efd;
+}
+
+.bottom-nav i{
+    display:block;
+    font-size:18px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="top-header d-flex justify-content-between align-items-center">
+    <div class="event">
+        <strong>My Events</strong>
+        <span class="flag-circle">
+            <img src="https://flagcdn.com/w40/es.png">
+        </span>
+    </div>
+    <div>Help</div>
+</div>
+
+<!-- TABS -->
+<div class="custom-tabs">
+    <div class="active">UPCOMING (1)</div>
+    <div>PAST (0)</div>
+</div>
+
+<!-- EVENT CARD (Clickable) -->
+<div class="event-card" onclick="goToTicket()">
+
+    <img src="images/images-bts.jpeg" class="event-image">
+
+    <div class="event-content">
+        <div class="event-date">
+            SAT, JUN 27, 2026 • 8:00 PM
+        </div>
+
+        <div class="event-title">
+            BTS WORLD TOUR ‘ARIRANG’ IN MADRID
+        </div>
+
+        <div class="event-location mt-2">
+            Estadio Riyadh Air Metropolitano, Madrid, ES
+        </div>
+    </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+    <a href="#"><i class="bi bi-search"></i>Discover</a>
+    <a href="#"><i class="bi bi-heart"></i>Favorites</a>
+    <a href="tickets.html" class="active"><i class="bi bi-ticket"></i>My Tickets</a>
+    <a href="#"><i class="bi bi-cash"></i>Sell</a>
+    <a href="#"><i class="bi bi-person"></i>My Account</a>
+</div>
+
+<script>
+function goToTicket(){
+    window.location.href = "tickets.html";
+}
+</script>
+
+</body>
+</html>

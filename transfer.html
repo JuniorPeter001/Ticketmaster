@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transfer Ticket</title>
+<link rel="stylesheet" href="transfer.css">
+</head>
+<body>
+
+<div class="header">
+    <div onclick="goBack()">Back</div>
+    <div>Transfer Ticket</div>
+    <div></div>
+</div>
+
+<!-- Ticket Preview -->
+<div id="ticketPreview"></div>
+
+<!-- Transfer Form -->
+<div class="form-container">
+    <h3>Ticket Information</h3>
+
+    <div class="ticket-meta">
+        <div><span>SEC</span><strong id="sec"></strong></div>
+        <div><span>ROW</span><strong id="row"></strong></div>
+        <div><span>SEAT</span><strong id="seat"></strong></div>
+    </div>
+
+    <h3>Transfer To</h3>
+
+    <input type="text" id="firstName" placeholder="First Name">
+    <input type="text" id="lastName" placeholder="Last Name">
+    <input type="text" id="email" placeholder="Email or Mobile Number">
+    <textarea id="note" placeholder="Note (optional)"></textarea>
+
+    <div class="button-row">
+        <button class="btn-outline" onclick="goBack()">Back</button>
+        <button class="btn-primary" onclick="submitTransfer()">Transfer Tickets</button>
+    </div>
+</div>
+
+<script src="transfer.js"></script>
+
+<div class="transfer-panel" id="transferPanel">
+  <div class="panel-content">
+
+    <h3>Transfer Ticket</h3>
+
+    <div class="ticket-meta">
+        <div><span>SEC</span><strong id="pSec"></strong></div>
+        <div><span>ROW</span><strong id="pRow"></strong></div>
+        <div><span>SEAT</span><strong id="pSeat"></strong></div>
+    </div>
+
+    <input type="text" id="firstName" placeholder="First Name">
+    <input type="text" id="lastName" placeholder="Last Name">
+    <input type="text" id="email" placeholder="Email or Mobile Number">
+    <textarea id="note" placeholder="Note"></textarea>
+
+    <div class="button-row">
+        <button class="btn grey" onclick="closeTransfer()">Back</button>
+        <button class="btn blue" onclick="submitTransfer()">Transfer Tickets</button>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

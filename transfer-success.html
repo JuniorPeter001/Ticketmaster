@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transfer Success</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="page-container">
+
+    <div class="card success-card">
+
+        <div class="check-circle">✓</div>
+
+        <h2 class="success-title">
+            YOU'VE SENT A TICKET TO 
+            <span id="recipientName">John Doe</span>
+        </h2>
+
+        <p class="recipient-email" id="recipientEmail">
+            johndoe@email.com
+        </p>
+
+        <div class="blue-bar"></div>
+
+        <div class="ticket-info">
+
+            <h3>Reserved Seating</h3>
+
+            <div class="divider"></div>
+
+            <div class="info-block">
+                <span class="label">LEVEL</span>
+                <span class="value">Ingang Noord 1e Ring</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="row-section">
+                <div>
+                    <span class="label">SECTION</span>
+                    <span class="value" id="successSection">Vak 102</span>
+                </div>
+
+                <div>
+                    <span class="label">ROW</span>
+                    <span class="value" id="successRow">4</span>
+                </div>
+
+                <div>
+                    <span class="label">SEAT</span>
+                    <span class="value" id="successSeat">53</span>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <p class="transfer-note">
+                Please note that the ticket must be accepted by the recipient for completion of the transfer. Once accepted, the recipient will receive a new ticket and the original ticket will no longer be active in your account. You can cancel the ticket transfer at any time prior to the recipient accepting the ticket.
+            </p>
+
+            <div class="button-row">
+                <button class="btn-outline" onclick="goBack()">Return to My Tickets</button>
+                <button class="btn-primary" onclick="transferAnother()">Transfer Another Ticket</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card info-card">
+        <h3>What Happens Next?</h3>
+
+        <div class="info-box">
+            <div class="icon-circle">i</div>
+            <div>
+                <h4>Stay Updated</h4>
+                <p>You can view the status of your ticket transfer at any time from My Tickets.</p>
+                <button class="btn-outline small">View Transfer Status</button>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="icon-square">🕒</div>
+            <div>
+                <h4>Changed Your Mind?</h4>
+                <p>Until the ticket(s) have been accepted, you can cancel the transfer from My Tickets.</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+document.getElementById("recipientName").innerText =
+    localStorage.getItem("transferName") || "Recipient Name";
+
+document.getElementById("recipientEmail").innerText =
+    localStorage.getItem("transferEmail") || "recipient@email.com";
+
+/* 🔥 GET TICKET DATA */
+const savedSection = localStorage.getItem("transferSec");
+const savedRow = localStorage.getItem("transferRow");
+const savedSeats = localStorage.getItem("transferSeats");
+
+if(savedSection){
+    document.getElementById("successSection").innerText = "Vak " + savedSection;
+}
+
+if(savedRow){
+    document.getElementById("successRow").innerText = savedRow;
+}
+
+if(savedSeats){
+    document.getElementById("successSeat").innerText = savedSeats;
+}
+
+function goBack(){
+    window.location.href = "tickets.html";
+}
+
+function transferAnother(){
+    window.location.href = "tickets.html";
+}
+</script>
+
+</body>
+</html>

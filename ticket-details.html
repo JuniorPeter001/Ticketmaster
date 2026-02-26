@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Tickets</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    color:#fff;
+    overflow-x:hidden;
+}
+
+/* HEADER */
+.header{
+    background:#000;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+/* TOP TABS */
+.top-tabs{
+    background:#000;
+    display:flex;
+    justify-content:center;
+    gap:40px;
+}
+
+.top-tabs div{
+    padding:10px;
+    cursor:pointer;
+    color:#888;
+}
+
+.top-tabs .active{
+    color:#fff;
+    border-bottom:2px solid #fff;
+}
+
+/* SLIDER */
+.slider{
+    display:flex;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scroll-behavior:smooth;
+}
+
+.slider::-webkit-scrollbar{
+    display:none;
+}
+
+.ticket{
+    min-width:100%;
+    scroll-snap-align:start;
+    padding:15px;
+    box-sizing:border-box;
+    border: 1px solid #000;
+}
+
+/* INDICATOR DOTS */
+.dots{
+    text-align:center;
+    margin-top:5px;
+}
+
+.dot{
+    height:8px;
+    width:8px;
+    margin:5px;
+    display:inline-block;
+    border-radius:50%;
+    background:#555;
+    transition:0.3s;
+}
+
+.dot.active{
+    background:#fff;
+    transform:scale(1.4);
+}
+
+/* TICKET CARD */
+.ticket-card{
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+    color:#000;
+}
+
+.ticket-top{
+    background:#2f5bd3;
+    color:#fff;
+    padding:15px;
+    text-align:center;
+}
+
+.ticket-info{
+    display:flex;
+    justify-content:space-around;
+    margin-top:10px;
+    font-weight:bold;
+}
+
+.image-section{
+    position:relative;
+}
+
+.image-section img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+.overlay{
+    position:absolute;
+    bottom:15px;
+    left:15px;
+    color:#fff;
+    text-shadow:0 0 5px rgba(0,0,0,0.8);
+}
+
+.overlay h3{
+    margin:0;
+    font-size:18px;
+}
+
+.overlay p{
+    margin:0;
+    font-size:13px;
+}
+
+.ticket-body{
+    padding:15px;
+    text-align:center;
+}
+
+.view-btn{
+    background:#000;
+    color:#fff;
+    padding:10px;
+    border:none;
+    width:100%;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* ACTION BUTTONS */
+.actions{
+    display:flex;
+    justify-content:space-around;
+    margin:15px;
+}
+
+.actions button{
+    padding:10px;
+    width:30%;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.transfer{
+    background:#2f5bd3;
+    color:#fff;
+}
+
+.sell{
+    background:#ccc;
+}
+
+.orders{
+    background:#2f5bd3;
+    color:#fff;
+}
+
+/* MAP */
+.map{
+    margin:15px;
+}
+
+.map iframe{
+    width:100%;
+    height:200px;
+    border-radius:10px;
+}
+
+/* QR POPUP */
+.qr-popup{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.9);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+.qr-popup img{
+    width:200px;
+    background:#fff;
+    padding:10px;
+}
+
+/* TRANSFER PANEL */
+.transfer-panel{
+    position:fixed;
+    bottom:-100%;
+    left:0;
+    width:100%;
+    background:#fff;
+    color:#000;
+    border-radius:20px 20px 0 0;
+    padding:20px;
+    transition:0.4s;
+}
+
+.transfer-panel.active{
+    bottom:0;
+}
+
+.transfer-panel input,
+.transfer-panel textarea{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+}
+
+.transfer-panel button{
+    width:100%;
+    padding:12px;
+    background:#2f5bd3;
+    color:#fff;
+    border:none;
+    border-radius:6px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div>✕</div>
+    <div>My Tickets</div>
+    <div>Help</div>
+</div>
+
+<div class="top-tabs">
+    <div class="active">MY TICKETS</div>
+    <div>ADD-ONS</div>
+</div>
+
+<!-- SLIDER -->
+<div class="slider" id="slider">
+
+    <!-- TICKET 1 -->
+    <div class="ticket" data-seat="13">
+        <div class="ticket-card">
+            <div class="ticket-top">
+                Artist Presale
+                <div class="ticket-info">
+                    <div>SEC<br>120</div>
+                    <div>ROW<br>7</div>
+                    <div>SEAT<br>13</div>
+                </div>
+            </div>
+
+            <div class="image-section">
+                <img src="images/images-bts.jpeg">
+                <div class="overlay">
+                    <h3>BTS WORLD TOUR 'ARIRANG' IN MADRID</h3>
+                    <p>Sat, Jun 27, 8:00 PM</p>
+                    <p>Estadio Riyadh Air Metropolitano</p>
+                </div>
+            </div>
+
+            <div class="ticket-body">
+                <p><strong>Gate 2</strong></p>
+                <button class="view-btn" onclick="showQR()">⌗ View Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TICKET 2 -->
+    <div class="ticket" data-seat="14">
+        <div class="ticket-card">
+            <div class="ticket-top">
+                Artist Presale
+                <div class="ticket-info">
+                    <div>SEC<br>120</div>
+                    <div>ROW<br>7</div>
+                    <div>SEAT<br>14</div>
+                </div>
+            </div>
+
+            <div class="image-section">
+                <img src="images/images-bts.jpeg">
+                <div class="overlay">
+                    <h3>BTS WORLD TOUR 'ARIRANG' IN MADRID</h3>
+                    <p>Sat, Jun 27, 8:00 PM</p>
+                    <p>Estadio Riyadh Air Metropolitano</p>
+                </div>
+            </div>
+
+            <div class="ticket-body">
+                <p><strong>Gate 2</strong></p>
+                <button class="view-btn" onclick="showQR()">⌗ View Ticket</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="dots" id="dots"></div>
+
+<div class="actions">
+    <button class="transfer" onclick="openTransfer()">Transfer</button>
+    <button class="sell">Sell</button>
+    <button class="orders">Orders</button>
+</div>
+
+<div class="map">
+<iframe src="https://www.google.com/maps?q=Estadio+Riyadh+Air+Metropolitano&output=embed"></iframe>
+</div>
+
+<!-- QR POPUP -->
+<div class="qr-popup" id="qrPopup" onclick="closeQR()">
+    <h2>Scan Ticket</h2>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=BTS-TICKET-120-7">
+    <p>Tap anywhere to close</p>
+</div>
+
+<!-- TRANSFER PANEL -->
+<div class="transfer-panel" id="transferPanel">
+    <h3>Transfer Tickets</h3>
+    <p id="ticketDetails"></p>
+    <input type="text" id="firstName" placeholder="First Name">
+    <input type="text" id="lastName" placeholder="Last Name">
+    <input type="text" id="email" placeholder="Email or Mobile Number">
+    <textarea id="note" placeholder="Note"></textarea>
+    <button onclick="submitTransfer()">Transfer Tickets</button>
+</div>
+
+<script>
+
+const slider = document.getElementById("slider");
+const dotsContainer = document.getElementById("dots");
+const tickets = document.querySelectorAll(".ticket");
+
+tickets.forEach((_,i)=>{
+    let dot=document.createElement("span");
+    dot.classList.add("dot");
+    if(i===0) dot.classList.add("active");
+    dotsContainer.appendChild(dot);
+});
+
+slider.addEventListener("scroll", ()=>{
+    let index = Math.round(slider.scrollLeft / window.innerWidth);
+    document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
+    document.querySelectorAll(".dot")[index].classList.add("active");
+});
+
+function showQR(){
+    document.getElementById("qrPopup").style.display="flex";
+}
+
+function closeQR(){
+    document.getElementById("qrPopup").style.display="none";
+}
+
+function openTransfer(){
+    let index = Math.round(slider.scrollLeft / window.innerWidth);
+    let seat = tickets[index].dataset.seat;
+    document.getElementById("ticketDetails").innerText =
+    "Sec 120 • Row 7 • Seat " + seat;
+    document.getElementById("transferPanel").classList.add("active");
+}
+
+function submitTransfer(){
+    let first = document.getElementById("firstName").value;
+    let last = document.getElementById("lastName").value;
+    let email = document.getElementById("email").value;
+
+    localStorage.setItem("transferName", first+" "+last);
+    localStorage.setItem("transferEmail", email);
+
+    window.location.href="transfer-success.html";
+}
+
+</script>
+
+</body>
+</html>

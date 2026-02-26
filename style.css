@@ -1,0 +1,203 @@
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    background:#f2f2f2;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+.page-container{
+    width:100%;
+    max-width:680px;
+    margin:auto;
+    padding:16px;
+}
+
+.card{
+    background:#fff;
+    border-radius:10px;
+    padding:20px;
+    margin-bottom:18px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* ✅ Success Icon */
+.check-circle{
+    width:56px;
+    height:56px;
+    background:#16a34a;
+    color:#fff;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    margin:0 auto 15px auto;
+}
+
+/* ✅ Title */
+.success-title{
+    font-size:18px;
+    font-weight:700;
+    text-align:left;
+    margin-bottom:6px;
+    word-wrap:break-word;
+}
+
+.recipient-email{
+    font-size:14px;
+    color:#6b7280;
+    margin-bottom:15px;
+    word-break:break-word;
+}
+
+.blue-bar{
+    height:6px;
+    background:#1d4ed8;
+    border-radius:4px;
+    margin:15px 0 20px 0;
+}
+
+/* Ticket Info */
+.ticket-info h3{
+    font-size:16px;
+    margin-bottom:10px;
+}
+
+.label{
+    font-size:11px;
+    color:#6b7280;
+    letter-spacing:0.5px;
+}
+
+.value{
+    font-size:16px;
+    font-weight:600;
+    margin-top:3px;
+}
+
+.info-block{
+    padding:10px 0;
+}
+
+.row-section{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    padding:10px 0;
+}
+
+.row-section > div{
+    flex:1;
+    min-width:90px;
+}
+
+.divider{
+    height:1px;
+    background:#e5e7eb;
+}
+
+.transfer-note{
+    font-size:13px;
+    color:#374151;
+    margin-top:12px;
+    line-height:1.5;
+}
+
+/* Buttons */
+.button-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:18px;
+}
+
+.btn-primary,
+.btn-outline{
+    flex:1;
+    min-width:140px;
+    padding:12px;
+    font-size:14px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.btn-primary{
+    background:#1d4ed8;
+    color:#fff;
+    border:none;
+}
+
+.btn-outline{
+    background:#fff;
+    border:1px solid #1d4ed8;
+    color:#1d4ed8;
+}
+
+/* What Happens Next */
+.info-card h3{
+    margin-bottom:10px;
+}
+
+.info-box{
+    display:flex;
+    gap:14px;
+    margin-top:18px;
+    align-items:flex-start;
+}
+
+.icon-circle{
+    min-width:42px;
+    height:42px;
+    border-radius:50%;
+    border:2px solid #1d4ed8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#1d4ed8;
+    font-weight:bold;
+}
+
+.icon-square{
+    min-width:42px;
+    height:42px;
+    border:2px solid #1d4ed8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#1d4ed8;
+}
+
+.small{
+    padding:8px 12px;
+    font-size:13px;
+    margin-top:8px;
+}
+
+/* ✅ Extra Small Devices */
+@media(max-width:480px){
+
+    .card{
+        padding:16px;
+    }
+
+    .success-title{
+        font-size:16px;
+    }
+
+    .value{
+        font-size:15px;
+    }
+
+    .btn-primary,
+    .btn-outline{
+        width:100%;
+    }
+
+    .button-row{
+        flex-direction:column;
+    }
+
+}
