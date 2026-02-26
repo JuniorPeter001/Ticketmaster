@@ -572,295 +572,324 @@ svg {
 </div>
 
 <script>
+    /* ================================
+       GLOBAL STATE
+    ================================= */
+    let tickets = [
+        {
+            id: 1,
+            section: "120",
+            row: "7",
+            seat: "13",
+            gate: "Gate 2",
+            overlayTitle: "BTS WORLD TOUR 'ARIRANG' IN MADRID",
+            overlayText: "Sat, Jun 27, 8:00 PM • Estadio Riyadh Air Metropolitano",
+            image: "images/images-bts.jpeg"
+        },
+        {
+            id: 2,
+            section: "101",
+            row: "4",
+            seat: "22",
+            gate: "Gate 3",
+            overlayTitle: "BTS WORLD TOUR 'ARIRANG' IN MADRID",
+            overlayText: "Sat, Jun 27, 8:00 PM • Estadio Riyadh Air Metropolitano",
+            image: "images/images-bts.jpeg"
+        },
+        {
+            id: 3,
+            section: "102",
+            row: "6",
+            seat: "26",
+            gate: "Gate 1",
+            overlayTitle: "BTS WORLD TOUR 'ARIRANG' IN MADRID",
+            overlayText: "Sat, Jun 27, 8:00 PM • Estadio Riyadh Air Metropolitano",
+            image: "images/images-bts.jpeg"
+        }
+    ];
 
-/* ================= GLOBAL STATE ================= */
+    // Try to load from localStorage (only if it exists)
+    const storedTickets = localStorage.getItem("myTickets");
+    if (storedTickets) {
+        tickets = JSON.parse(storedTickets);
+    } else {
+        // Persist defaults if not in local storage
+        localStorage.setItem("myTickets", JSON.stringify(tickets));
+    }
 
-let tickets = JSON.parse(localStorage.getItem("myTickets")) || [];
-let selectedTickets = [];
-let editingId = null;
+    let selectedTickets = [];
+    let editingId = null;
 
-const slider = document.getElementById("ticketSlider");
-const dotsContainer = document.getElementById("dots");
-const transferBtn = document.querySelector(".transfer");
+    const slider = document.getElementById("ticketSlider");
+    const dotsContainer = document.getElementById("dots");
+    const transferBtn = document.querySelector(".transfer");
 
-/* ================= RENDER TICKETS ================= */
+    /* ================================
+       RENDER TICKETS
+    ================================= */
 
-function renderTickets(){
+    function renderTickets(){
+        slider.innerHTML = "";
+        dotsContainer.innerHTML = "";
+        selectedTickets = [];
 
-    slider.innerHTML = "";
-    dotsContainer.innerHTML = "";
-    selectedTickets = [];
+        tickets.forEach((ticket, index) => {
+            // Ticket Card
+            const card = document.createElement("div");
+            card.className = "ticket-card";
+            card.dataset.id = ticket.id;
 
-    tickets.forEach((ticket, index) => {
-
-        const card = document.createElement("div");
-        card.className = "ticket-card";
-        card.dataset.id = ticket.id;
-
-        card.innerHTML = `
-            <div class="ticket-top">
-                <div class="presale">
-                    Artist Presale
-                    <span class="info-icon">ⓘ</span>
+            card.innerHTML = `
+                <div class="ticket-top">
+                    <div class="info-icon">ⓘ</div>
+                    <div class="presale">Artist Presale</div>
+                    <div class="ticket-meta">
+                        <div>SEC<strong>${ticket.section}</strong></div>
+                        <div>ROW<strong>${ticket.row}</strong></div>
+                        <div>SEAT<strong>${ticket.seat}</strong></div>
+                    </div>
                 </div>
 
-                <div class="ticket-meta">
-                    <div>SEC<strong>${ticket.section}</strong></div>
-                    <div>ROW<strong>${ticket.row}</strong></div>
-                    <div>SEAT<strong>${ticket.seat}</strong></div>
+                <div class="ticket-image">
+                    <img src="${ticket.image}">
+                    <div class="ticket-overlay">
+                        <h3>${ticket.overlayTitle}</h3>
+                        <p>${ticket.overlayText}</p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="ticket-image">
-                <img src="${ticket.image}">
-                <div class="ticket-overlay">
-                    <h3>${ticket.overlayTitle}</h3>
-                    <p>${ticket.overlayText}</p>
+                <div class="ticket-body">
+                    <div class="gate">${ticket.gate}</div>
+                    <button class="view-btn">View Ticket</button>
+                    <div class="ticket-details">Ticket Details</div>
                 </div>
-            </div>
+            `;
 
-            <div class="ticket-body">
-                <div class="gate">${ticket.gate}</div>
-                <button class="view-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upc-scan" viewBox="0 0 16 16">
-                        <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5M.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5M3 4.5a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0z"/>
-                    </svg>
-                    View Ticket
-                </button>
-                <div class="ticket-details">
-                    Ticket Details
-                </div>
-            </div>
-        `;
+            // Double-click to edit
+            card.addEventListener("dblclick", () => editTicket(ticket.id));
 
-        card.addEventListener("click", () => toggleSelect(ticket.id));
-        card.addEventListener("dblclick", () => editTicket(ticket.id));
+            // Seat Selection
+            card.addEventListener("click", () => toggleSelect(card));
 
-        slider.appendChild(card);
+            slider.appendChild(card);
 
-        const dot = document.createElement("span");
-        if(index === 0) dot.classList.add("active");
-        dotsContainer.appendChild(dot);
+            // Dots
+            const dot = document.createElement("span");
+            if (index === 0) dot.classList.add("active");
+            dotsContainer.appendChild(dot);
+        });
+
+        updateTransferButton();
+    }
+
+    /* ================================
+       SELECT TICKET
+    ================================= */
+
+    function toggleSelect(card) {
+        const id = Number(card.dataset.id);
+        if (selectedTickets.includes(id)) {
+            selectedTickets = selectedTickets.filter(t => t !== id);
+            card.classList.remove("selected");
+        } else {
+            selectedTickets.push(id);
+            card.classList.add("selected");
+        }
+        updateTransferButton();
+    }
+
+    function updateTransferButton(){
+        if (selectedTickets.length === 0) {
+            transferBtn.innerText = "Transfer";
+        } else if (selectedTickets.length === 1) {
+            transferBtn.innerText = "Transfer 1 Ticket";
+        } else {
+            transferBtn.innerText = `Transfer ${selectedTickets.length} Tickets`;
+        }
+    }
+
+    /* ================================
+       TRANSFER LOGIC
+    ================================= */
+
+    transferBtn.addEventListener("click", () => {
+        if (selectedTickets.length === 0) {
+            alert("Please select at least one ticket.");
+            return;
+        }
+
+        const selected = tickets.filter(t => selectedTickets.includes(t.id));
+
+        const count = selected.length;
+        const seats = selected.map(t => t.seat);
+
+        document.getElementById("selectedCount").innerText = 
+            count + (count === 1 ? " Ticket Selected" : " Tickets Selected");
+        document.getElementById("selectedSec").innerText = 
+            selected[0].section;
+        document.getElementById("selectedRow").innerText = 
+            selected[0].row;
+        document.getElementById("selectedSeat").innerText = 
+            seats.join(", ");
+
+        document.querySelector(".confirm-transfer").innerText = 
+            "Transfer " + count + (count === 1 ? " Ticket" : " Tickets");
+
+        document.getElementById("sheet").classList.add("active");
+        document.getElementById("overlay").classList.add("active");
     });
 
-    updateTransferButton();
-}
+    function closeTransfer() {
+        document.getElementById("sheet").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
+    }
 
-/* ================= CAROUSEL DOT SYNC ================= */
+    /* ================================
+       ADD / EDIT / DELETE
+    ================================= */
 
-slider.addEventListener("scroll", () => {
-    const cards = document.querySelectorAll(".ticket-card");
-    const dots = document.querySelectorAll("#dots span");
+    function saveTicket() {
+        const sec = document.getElementById("secInput").value;
+        const row = document.getElementById("rowInput").value;
+        const seat = document.getElementById("seatInput").value;
+        const gate = document.getElementById("gateInput").value;
+        const title = document.getElementById("overlayTitleInput").value;
+        const text = document.getElementById("overlayTextInput").value;
+        const image = document.getElementById("imageInput").value;
 
-    if (!cards.length) return;
+        if (!sec || !row || !seat) {
+            alert("Section, Row and Seat are required.");
+            return;
+        }
 
-    const cardWidth = cards[0].offsetWidth;
-    const scrollLeft = slider.scrollLeft;
+        const newTicket = {
+            id: editingId || Date.now(),
+            section: sec,
+            row: row,
+            seat: seat,
+            gate: gate,
+            overlayTitle: title,
+            overlayText: text,
+            image: image || "images/images-bts.jpeg"
+        };
 
-    // Calculate closest index
-    const index = Math.round(scrollLeft / cardWidth);
+        if (editingId) {
+            tickets = tickets.map(t => t.id === editingId ? newTicket : t);
+        } else {
+            tickets.push(newTicket);
+        }
 
-    dots.forEach((dot, i) => {
-        dot.classList.toggle("active", i === index);
+        localStorage.setItem("myTickets", JSON.stringify(tickets));
+
+        editingId = null;
+        clearForm();
+        renderTickets();
+    }
+
+    function editTicket(id) {
+        const ticket = tickets.find(t => t.id === id);
+        editingId = id;
+
+        document.getElementById("secInput").value = ticket.section;
+        document.getElementById("rowInput").value = ticket.row;
+        document.getElementById("seatInput").value = ticket.seat;
+        document.getElementById("gateInput").value = ticket.gate;
+        document.getElementById("overlayTitleInput").value = ticket.overlayTitle;
+        document.getElementById("overlayTextInput").value = ticket.overlayText;
+        document.getElementById("imageInput").value = ticket.image;
+
+        tabs[1].click(); // Switch to Add-ons tab
+    }
+
+    function deleteTicket() {
+        if (!editingId) {
+            alert("Double-click a ticket to select it for deletion.");
+            return;
+        }
+
+        if (!confirm("Are you sure you want to delete this ticket?")) return;
+
+        tickets = tickets.filter(t => t.id !== editingId);
+        localStorage.setItem("myTickets", JSON.stringify(tickets));
+
+        editingId = null;
+        clearForm();
+        renderTickets();
+    }
+
+    function clearForm() {
+        document.getElementById("secInput").value = "";
+        document.getElementById("rowInput").value = "";
+        document.getElementById("seatInput").value = "";
+        document.getElementById("gateInput").value = "";
+        document.getElementById("overlayTitleInput").value = "";
+        document.getElementById("overlayTextInput").value = "";
+        document.getElementById("imageInput").value = "";
+
+        document.getElementById("saveTicketBtn").innerText = "Save Ticket";
+    }
+
+    /* ================================
+       TABS
+    ================================= */
+
+    const tabs = document.querySelectorAll(".tabs div");
+    const addonsPanel = document.getElementById("addonsPanel");
+    const ticketSection = document.querySelector(".ticket-section");
+
+    tabs[0].addEventListener("click", () => {
+        tabs[0].classList.add("active");
+        tabs[1].classList.remove("active");
+        addonsPanel.style.display = "none";
+        ticketSection.style.display = "block";
     });
-});
 
-/* ================= SELECT TICKETS ================= */
-
-function toggleSelect(id){
-
-    if(selectedTickets.includes(id)){
-        selectedTickets = selectedTickets.filter(t => t !== id);
-    } else {
-        selectedTickets.push(id);
-    }
-
-    document.querySelectorAll(".ticket-card").forEach(card => {
-        card.classList.toggle(
-            "selected",
-            selectedTickets.includes(Number(card.dataset.id))
-        );
+    tabs[1].addEventListener("click", () => {
+        tabs[1].classList.add("active");
+        tabs[0].classList.remove("active");
+        addonsPanel.style.display = "block";
+        ticketSection.style.display = "none";
     });
 
-    updateTransferButton();
-}
+    /* ================================
+       CAROUSEL
+    ================================= */
 
-function updateTransferButton(){
+    function updateCarousel() {
+        const cards = document.querySelectorAll(".ticket-card");
+        const dots = document.querySelectorAll("#dots span");
 
-    if(selectedTickets.length === 0){
-        transferBtn.innerText = "Transfer";
-    } else if(selectedTickets.length === 1){
-        transferBtn.innerText = "Transfer 1 Ticket";
-    } else {
-        transferBtn.innerText = `Transfer ${selectedTickets.length} Tickets`;
-    }
-}
+        const sliderCenter = slider.scrollLeft + slider.offsetWidth / 2;
 
-/* ================= TRANSFER ================= */
+        cards.forEach((card, index) => {
+            const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+            const distance = Math.abs(sliderCenter - cardCenter);
 
-transferBtn.addEventListener("click", openTransfer);
-
-function openTransfer(){
-
-    if(selectedTickets.length === 0){
-        alert("Please select at least one ticket.");
-        return;
-    }
-
-    const selected = tickets.filter(t => selectedTickets.includes(t.id));
-
-    document.getElementById("selectedCount").innerText =
-        `${selected.length} Ticket${selected.length > 1 ? "s" : ""} Selected`;
-
-    document.getElementById("selectedSec").innerText =
-        [...new Set(selected.map(t => t.section))].join(", ");
-
-    document.getElementById("selectedRow").innerText =
-        [...new Set(selected.map(t => t.row))].join(", ");
-
-    document.getElementById("selectedSeat").innerText =
-        selected.map(t => t.seat).join(", ");
-
-    document.getElementById("overlay").classList.add("active");
-    document.getElementById("sheet").classList.add("active");
-
-    document.querySelector(".confirm-transfer").innerText =
-        `Transfer ${selected.length} Ticket${selected.length > 1 ? "s" : ""}`;
-}
-
-function closeTransfer(){
-    document.getElementById("overlay").classList.remove("active");
-    document.getElementById("sheet").classList.remove("active");
-}
-
-function submitTransfer(){
-
-    const first = document.getElementById("firstName").value;
-    const last = document.getElementById("lastName").value;
-    const contact = document.getElementById("contact").value;
-
-    if(!first || !last || !contact){
-        alert("Please fill all required fields.");
-        return;
+            if (distance < card.offsetWidth / 2) {
+                card.style.transform = "scale(1)";
+                dots.forEach(d => d.classList.remove("active"));
+                if (dots[index]) dots[index].classList.add("active");
+            } else {
+                card.style.transform = "scale(0.94)";
+            }
+        });
     }
 
-    const selected = tickets.filter(t => selectedTickets.includes(t.id));
+    slider.addEventListener("scroll", updateCarousel);
+    window.addEventListener("load", updateCarousel);
 
-    localStorage.setItem("transferName", first + " " + last);
-    localStorage.setItem("transferContact", contact);
-    localStorage.setItem("transferTickets", JSON.stringify(selected));
+    /* ================================
+       CLOSE BUTTON (X)
+    ================================= */
 
-    window.location.href = "transfer-success.html";
-}
+    document.querySelector(".header .left").addEventListener("click", () => {
+        window.location.href = "index.html"; // Redirect back to index page
+    });
 
-/* ================= ADD / EDIT ================= */
-
-function saveTicket(){
-
-    const sec = document.getElementById("secInput").value;
-    const row = document.getElementById("rowInput").value;
-    const seat = document.getElementById("seatInput").value;
-    const gate = document.getElementById("gateInput").value;
-    const title = document.getElementById("overlayTitleInput").value;
-    const text = document.getElementById("overlayTextInput").value;
-    const image = document.getElementById("imageInput").value;
-
-    if(!sec || !row || !seat){
-        alert("Section, Row and Seat required.");
-        return;
-    }
-
-    const newTicket = {
-        id: editingId || Date.now(),
-        section: sec,
-        row: row,
-        seat: seat,
-        gate: gate,
-        overlayTitle: title,
-        overlayText: text,
-        image: image || "https://via.placeholder.com/400x200"
-    };
-
-    if(editingId){
-        tickets = tickets.map(t => t.id === editingId ? newTicket : t);
-    } else {
-        tickets.push(newTicket);
-    }
-
-    localStorage.setItem("myTickets", JSON.stringify(tickets));
-
-    editingId = null;
-    clearForm();
+    /* ================================
+       INIT
+    ================================= */
     renderTickets();
-}
-
-function editTicket(id){
-
-    const ticket = tickets.find(t => t.id === id);
-    editingId = id;
-
-    document.getElementById("secInput").value = ticket.section;
-    document.getElementById("rowInput").value = ticket.row;
-    document.getElementById("seatInput").value = ticket.seat;
-    document.getElementById("gateInput").value = ticket.gate;
-    document.getElementById("overlayTitleInput").value = ticket.overlayTitle;
-    document.getElementById("overlayTextInput").value = ticket.overlayText;
-    document.getElementById("imageInput").value = ticket.image;
-}
-
-function deleteTicket(){
-
-    if(!editingId){
-        alert("Double-click a ticket to edit/delete.");
-        return;
-    }
-
-    if(!confirm("Delete this ticket?")) return;
-
-    tickets = tickets.filter(t => t.id !== editingId);
-    localStorage.setItem("myTickets", JSON.stringify(tickets));
-
-    editingId = null;
-    clearForm();
-    renderTickets();
-}
-
-function clearForm(){
-    document.getElementById("secInput").value = "";
-    document.getElementById("rowInput").value = "";
-    document.getElementById("seatInput").value = "";
-    document.getElementById("gateInput").value = "";
-    document.getElementById("overlayTitleInput").value = "";
-    document.getElementById("overlayTextInput").value = "";
-    document.getElementById("imageInput").value = "";
-}
-
-/* ================= TABS ================= */
-
-const tabs = document.querySelectorAll(".tabs div");
-const addonsPanel = document.getElementById("addonsPanel");
-
-tabs[0].addEventListener("click", () => {
-    tabs[0].classList.add("active");
-    tabs[1].classList.remove("active");
-    addonsPanel.style.display = "none";
-});
-
-tabs[1].addEventListener("click", () => {
-    tabs[1].classList.add("active");
-    tabs[0].classList.remove("active");
-    addonsPanel.style.display = "block";
-});
-
-/* ================= CLOSE X ================= */
-
-document.querySelector(".left").addEventListener("click", () => {
-    window.location.href = "index.html";
-});
-
-/* ================= INIT ================= */
-
-renderTickets();
 
 </script>
 </body>
