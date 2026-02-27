@@ -491,14 +491,14 @@ input, textarea, select {
     <div id="addonsPanel" style="display:none; padding:16px;">
 
     <h3 style="margin-bottom:10px;">Add / Edit Ticket</h3>
-
+    <input type="text" id="presaleInput" placeholder="Presale Label (e.g. Artist Presale)" style="width:100%;padding:10px;margin-bottom:8px;">
     <input type="text" id="secInput" placeholder="Section" style="width:100%;padding:10px;margin-bottom:8px;">
     <input type="text" id="rowInput" placeholder="Row" style="width:100%;padding:10px;margin-bottom:8px;">
     <input type="text" id="seatInput" placeholder="Seat (comma separated)" style="width:100%;padding:10px;margin-bottom:8px;">
     <input type="text" id="gateInput" placeholder="Gate" style="width:100%;padding:10px;margin-bottom:8px;">
     <input type="text" id="overlayTitleInput" placeholder="Overlay Title" style="width:100%;padding:10px;margin-bottom:8px;">
     <input type="text" id="overlayTextInput" placeholder="Overlay Text" style="width:100%;padding:10px;margin-bottom:8px;">
-    <input type="text" id="imageInput" placeholder="Image URL" style="width:100%;padding:10px;margin-bottom:12px;">
+    <input type="file" id="imageUpload" accept="image/*" style="width:100%;padding:10px;margin-bottom:12px;">
 
     <button onclick="saveTicket()" style="width:100%;padding:12px;background:#2e57e8;color:#fff;border:none;border-radius:6px;">
         Save Ticket
@@ -604,8 +604,7 @@ function renderTickets(){
 
         card.innerHTML = `
             <div class="ticket-top">
-                <div class="presale">
-                    Artist Presale
+                <div class="presale">${ticket.presale || "Artist Presale"}
                     <span class="info-icon">ⓘ</span>
                 </div>
 
@@ -768,35 +767,52 @@ function saveTicket(){
     const gate = document.getElementById("gateInput").value;
     const title = document.getElementById("overlayTitleInput").value;
     const text = document.getElementById("overlayTextInput").value;
-    const image = document.getElementById("imageInput").value;
+    const presale = document.getElementById("presaleInput").value;
+    const fileInput = document.getElementById("imageUpload");
 
     if(!sec || !row || !seat){
         alert("Section, Row and Seat required.");
         return;
     }
 
-    const newTicket = {
-        id: editingId || Date.now(),
-        section: sec,
-        row: row,
-        seat: seat,
-        gate: gate,
-        overlayTitle: title,
-        overlayText: text,
-        image: image || "https://via.placeholder.com/400x200"
-    };
+    const reader = new FileReader();
 
-    if(editingId){
-        tickets = tickets.map(t => t.id === editingId ? newTicket : t);
+    if(fileInput.files[0]){
+        reader.readAsDataURL(fileInput.files[0]);
+        reader.onload = function(){
+
+            saveTicketData(reader.result);
+        };
     } else {
-        tickets.push(newTicket);
+        saveTicketData(null);
     }
 
-    localStorage.setItem("myTickets", JSON.stringify(tickets));
+    function saveTicketData(imageData){
 
-    editingId = null;
-    clearForm();
-    renderTickets();
+        const newTicket = {
+            id: editingId || Date.now(),
+            presale: presale,
+            section: sec,
+            row: row,
+            seat: seat,
+            gate: gate,
+            overlayTitle: title,
+            overlayText: text,
+            image: imageData || "https://via.placeholder.com/400x200"
+        };
+
+        if(editingId){
+            tickets = tickets.map(t => t.id === editingId ? newTicket : t);
+        } else {
+            tickets.push(newTicket);
+        }
+
+        localStorage.setItem("myTickets", JSON.stringify(tickets));
+
+        editingId = null;
+        clearForm();
+        renderTickets();
+    }
 }
 
 function editTicket(id){
@@ -804,13 +820,13 @@ function editTicket(id){
     const ticket = tickets.find(t => t.id === id);
     editingId = id;
 
+    document.getElementById("presaleInput").value = ticket.presale || "";
     document.getElementById("secInput").value = ticket.section;
     document.getElementById("rowInput").value = ticket.row;
     document.getElementById("seatInput").value = ticket.seat;
     document.getElementById("gateInput").value = ticket.gate;
     document.getElementById("overlayTitleInput").value = ticket.overlayTitle;
     document.getElementById("overlayTextInput").value = ticket.overlayText;
-    document.getElementById("imageInput").value = ticket.image;
 }
 
 function deleteTicket(){
@@ -831,13 +847,14 @@ function deleteTicket(){
 }
 
 function clearForm(){
+    document.getElementById("presaleInput").value = "";
     document.getElementById("secInput").value = "";
     document.getElementById("rowInput").value = "";
     document.getElementById("seatInput").value = "";
     document.getElementById("gateInput").value = "";
     document.getElementById("overlayTitleInput").value = "";
     document.getElementById("overlayTextInput").value = "";
-    document.getElementById("imageInput").value = "";
+    document.getElementById("imageUpload").value = "";
 }
 
 /* ================= TABS ================= */
