@@ -19,25 +19,37 @@ body{
     background:#000;
     color:#fff;
     padding:15px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+}
+
+.help-btn{
+    cursor:pointer;
+    margin-left: auto;
 }
 
 /* EVENT */
 .event{
-    justify-self: center;
-    text-align: center;
-    margin-left: 30%;
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    align-items:center;
+    gap:8px;
 }
 
 /* FLAG */
 .flag-circle{
     width:18px;
     height:18px;
-    border: 1px solid #737070;
+    border:1px solid #737070;
     border-radius:50%;
     overflow:hidden;
-    display:inline-block;
-    margin-left:8px;
-    margin-top: 10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .flag-circle img{
@@ -142,33 +154,33 @@ body{
     <div class="event">
         <strong>My Events</strong>
         <span class="flag-circle">
-            <img src="https://flagcdn.com/w40/es.png">
+            <img id="eventFlag" src="https://flagcdn.com/w40/es.png">
         </span>
     </div>
-    <div>Help</div>
+    <div class="help-btn" onclick="openEditor()">Help</div>
 </div>
 
 <!-- TABS -->
 <div class="custom-tabs">
-    <div class="active">UPCOMING (1)</div>
-    <div>PAST (0)</div>
+    <div class="active" id="upcomingTab">UPCOMING (1)</div>
+    <div id="pastTab">PAST (0)</div>
 </div>
 
 <!-- EVENT CARD (Clickable) -->
 <div class="event-card" onclick="goToTicket()">
 
-    <img src="images/images-bts.jpeg" class="event-image">
+    <img id="eventImage" src="images/images-bts.jpeg" class="event-image">
 
     <div class="event-content">
-        <div class="event-date">
+        <div class="event-date" id="eventDate">
             SAT, JUN 27, 2026 • 8:00 PM
         </div>
 
-        <div class="event-title">
+        <div class="event-title" id="eventTitle">
             BTS WORLD TOUR ‘ARIRANG’ IN MADRID
         </div>
 
-        <div class="event-location mt-2">
+        <div class="event-location mt-2" id="eventLocation">
             Estadio Riyadh Air Metropolitano, Madrid, ES
         </div>
     </div>
@@ -183,10 +195,195 @@ body{
     <a href="#"><i class="bi bi-person"></i>My Account</a>
 </div>
 
+<!-- EDIT PANEL -->
+<div id="editPanel" style="
+    position:fixed;
+    top:0;
+    right:-100%;
+    width:100%;
+    height:100%;
+    background:#fff;
+    z-index:9999;
+    transition:0.4s;
+    overflow:auto;
+    padding:20px;
+    ">
+
+    <h4>Edit Event</h4>
+
+    <label>Country Name (e.g. Spain, United States, South Korea)</label>
+    <input type="text" id="flagInput" class="form-control mb-3">
+
+    <label>Upcoming Count</label>
+    <input type="number" id="upcomingInput" class="form-control mb-3">
+
+    <label>Past Count</label>
+    <input type="number" id="pastInput" class="form-control mb-3">
+
+    <label>Date & Time</label>
+    <input type="text" id="dateInput" class="form-control mb-3">
+
+    <label>Event Title</label>
+    <input type="text" id="titleInput" class="form-control mb-3">
+
+    <label>Location</label>
+    <input type="text" id="locationInput" class="form-control mb-3">
+
+    <label>Event Image</label>
+    <input type="file" id="imageInput" class="form-control mb-4">
+
+    <button class="btn btn-primary w-100 mb-2" onclick="saveEvent()">Save Changes</button>
+    <button class="btn btn-secondary w-100" onclick="closeEditor()">Cancel</button>
+
+</div>
+
 <script>
+
+function getCountryCode(countryName){
+
+    const countries = {
+        "spain": "es",
+        "united states": "us",
+        "south korea": "kr",
+        "france": "fr",
+        "germany": "de",
+        "italy": "it",
+        "brazil": "br",
+        "nigeria": "ng",
+        "united kingdom": "gb",
+        "canada": "ca",
+        "mexico": "mx",
+        "japan": "jp",
+        "china": "cn",
+        "australia": "au"
+    };
+
+    return countries[countryName.toLowerCase()] || "es";
+}    
+
 function goToTicket(){
     window.location.href = "tickets.html";
 }
+
+/* ===== OPEN / CLOSE PANEL ===== */
+
+function openEditor(){
+    document.getElementById("editPanel").style.right = "0";
+
+    // preload current values
+    document.getElementById("flagInput").value =
+        localStorage.getItem("countryName") || "Spain";
+
+    document.getElementById("upcomingInput").value =
+        localStorage.getItem("upcoming") || 1;
+
+    document.getElementById("pastInput").value =
+        localStorage.getItem("past") || 0;
+
+    document.getElementById("dateInput").value =
+        localStorage.getItem("date") || document.getElementById("eventDate").innerText;
+
+    document.getElementById("titleInput").value =
+        localStorage.getItem("title") || document.getElementById("eventTitle").innerText;
+
+    document.getElementById("locationInput").value =
+        localStorage.getItem("location") || document.getElementById("eventLocation").innerText;
+}
+
+function closeEditor(){
+    document.getElementById("editPanel").style.right = "-100%";
+}
+
+/* ===== SAVE EVENT ===== */
+
+function saveEvent(){
+
+    const countryName = document.getElementById("flagInput").value;
+    const flag = getCountryCode(countryName);
+    const upcoming = document.getElementById("upcomingInput").value;
+    const past = document.getElementById("pastInput").value;
+    const date = document.getElementById("dateInput").value;
+    const title = document.getElementById("titleInput").value;
+    const location = document.getElementById("locationInput").value;
+    const imageFile = document.getElementById("imageInput").files[0];
+
+    // Update UI immediately
+    document.getElementById("eventFlag").src =
+        "https://flagcdn.com/w40/" + flag + ".png";
+
+    document.getElementById("upcomingTab").innerText =
+        "UPCOMING (" + upcoming + ")";
+
+    document.getElementById("pastTab").innerText =
+        "PAST (" + past + ")";
+
+    document.getElementById("eventDate").innerText = date;
+    document.getElementById("eventTitle").innerText = title;
+    document.getElementById("eventLocation").innerText = location;
+
+    // Save text data
+    localStorage.setItem("countryName", countryName);
+    localStorage.setItem("flag", flag);
+    localStorage.setItem("upcoming", upcoming);
+    localStorage.setItem("past", past);
+    localStorage.setItem("date", date);
+    localStorage.setItem("title", title);
+    localStorage.setItem("location", location);
+
+    // Handle image upload
+    if(imageFile){
+        const reader = new FileReader();
+        reader.onload = function(e){
+            document.getElementById("eventImage").src = e.target.result;
+            localStorage.setItem("image", e.target.result);
+        }
+        reader.readAsDataURL(imageFile);
+    }
+
+    closeEditor();
+}
+
+/* ===== LOAD SAVED DATA ON PAGE LOAD ===== */
+
+window.onload = function(){
+
+    if(localStorage.getItem("flag")){
+        document.getElementById("eventFlag").src =
+            "https://flagcdn.com/w40/" + localStorage.getItem("flag") + ".png";
+    }
+
+    if(localStorage.getItem("upcoming")){
+        document.getElementById("upcomingTab").innerText =
+            "UPCOMING (" + localStorage.getItem("upcoming") + ")";
+    }
+
+    if(localStorage.getItem("past")){
+        document.getElementById("pastTab").innerText =
+            "PAST (" + localStorage.getItem("past") + ")";
+    }
+
+    if(localStorage.getItem("date")){
+        document.getElementById("eventDate").innerText =
+            localStorage.getItem("date");
+    }
+
+    if(localStorage.getItem("title")){
+        document.getElementById("eventTitle").innerText =
+            localStorage.getItem("title");
+    }
+
+    if(localStorage.getItem("location")){
+        document.getElementById("eventLocation").innerText =
+            localStorage.getItem("location");
+    }
+
+    if(localStorage.getItem("image")){
+        document.getElementById("eventImage").src =
+            localStorage.getItem("image");
+    }
+
+}
+
 </script>
 
 </body>
