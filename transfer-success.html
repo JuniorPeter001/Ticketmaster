@@ -94,28 +94,35 @@
 </div>
 
 <script>
+
+/* ===== NAME + CONTACT ===== */
+
 document.getElementById("recipientName").innerText =
     localStorage.getItem("transferName") || "Recipient Name";
 
 document.getElementById("recipientEmail").innerText =
-    localStorage.getItem("transferEmail") || "recipient@email.com";
+    localStorage.getItem("transferContact") || "recipient@email.com";
 
-/* 🔥 GET TICKET DATA */
-const savedSection = localStorage.getItem("transferSec");
-const savedRow = localStorage.getItem("transferRow");
-const savedSeats = localStorage.getItem("transferSeats");
+/* ===== GET SELECTED TICKETS ===== */
 
-if(savedSection){
-    document.getElementById("successSection").innerText = "Vak " + savedSection;
+const savedTickets = JSON.parse(localStorage.getItem("transferTickets"));
+
+if(savedTickets && savedTickets.length){
+
+    // SECTION (unique)
+    const sections = [...new Set(savedTickets.map(t => t.section))];
+    document.getElementById("successSection").innerText = sections.join(", ");
+
+    // ROW (unique)
+    const rows = [...new Set(savedTickets.map(t => t.row))];
+    document.getElementById("successRow").innerText = rows.join(", ");
+
+    // SEATS (all)
+    const seats = savedTickets.map(t => t.seat);
+    document.getElementById("successSeat").innerText = seats.join(", ");
 }
 
-if(savedRow){
-    document.getElementById("successRow").innerText = savedRow;
-}
-
-if(savedSeats){
-    document.getElementById("successSeat").innerText = savedSeats;
-}
+/* ===== BUTTONS ===== */
 
 function goBack(){
     window.location.href = "tickets.html";
@@ -124,6 +131,7 @@ function goBack(){
 function transferAnother(){
     window.location.href = "tickets.html";
 }
+
 </script>
 
 </body>
